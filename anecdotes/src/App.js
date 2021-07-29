@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 import {
   BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route, Link, useParams, 
 } from "react-router-dom"
 
 const Menu = () => {
@@ -24,11 +24,32 @@ const Menu = () => {
   )
 }
 
+// 7.2
+const Anecdote = ({ anecdotes }) => {
+
+  const id = useParams().id
+
+  console.log('anecdotes', anecdotes)
+
+  const anecdote = anecdotes.find(a => a.id === id)
+
+  console.log('anecdote', anecdote)
+
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div style={{ paddingTop: '5px' }}>has {anecdote.votes} votes</div>
+      <div style={{ paddingTop: '5px' }}>for more info see {anecdote.info}</div>
+    </div>
+  )
+}
+
+// 7.1
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} ><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link></li>)}
     </ul>
   </div>
 )
@@ -48,10 +69,12 @@ const About = () => (
 )
 
 const Footer = () => (
-  <div>
+  <div style={{ paddingTop: '25px' }}>
+
     Anecdote app for <a href='https://courses.helsinki.fi/fi/tkt21009'>Full Stack -websovelluskehitys</a>.
 
     See <a href='https://github.com/fullstack-hy/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2019/routed-anecdotes/blob/master/src/App.js</a> for the source code.
+  
   </div>
 )
 
@@ -59,7 +82,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const [vote, setvote] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -150,6 +173,10 @@ const App = () => {
           <CreateNew addNew={addNew} />
         </Route>
 
+        <Route path="/anecdotes/:id">
+          <Anecdote anecdotes ={anecdotes} />
+        </Route>
+     
         <Route path="/">
           <AnecdoteList anecdotes={anecdotes} />
         </Route>
