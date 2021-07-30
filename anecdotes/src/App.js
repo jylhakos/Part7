@@ -1,14 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import ReactDOM from 'react-dom'
+
+import './index.css';
 
 // 7.1 
 // $ npm install react-router-dom
 
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams, 
+  Switch, 
+  Route, 
+  Link, 
+  useParams,
+  useHistory,
 } from "react-router-dom"
+
+const Notification = ({notification}) => {
+  if (notification === null) {
+    return null
+  }
+
+  return (
+    <div className="notification">
+      {notification}
+    </div>
+  )
+}
 
 const Menu = () => {
   const padding = {
@@ -78,20 +96,31 @@ const Footer = () => (
   </div>
 )
 
+// 7.3
 const CreateNew = (props) => {
+
   const [content, setContent] = useState('')
+
   const [author, setAuthor] = useState('')
+
   const [info, setInfo] = useState('')
+  
   const [vote, setvote] = useState('')
 
+  const history = useHistory()
+
   const handleSubmit = (e) => {
+
     e.preventDefault()
+
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+
+    history.push('/anecdotes')
   }
 
   return (
@@ -136,17 +165,33 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const addNew = (anecdote) => {
+
     anecdote.id = (Math.random() * 10000).toFixed(0)
+
+    console.log('anecdote', anecdote)
+
     setAnecdotes(anecdotes.concat(anecdote))
+
+    // 7.3
+    setNotification(`A new anecdote ${anecdote.content} created`)
+
+    setTimeout(() => {
+      setNotification(null)
+    }, 10000)
+
   }
 
-  const anecdoteById = (id) =>
+  const anecdoteById = (id) => {
+
     anecdotes.find(a => a.id === id)
 
+  }
+
   const vote = (id) => {
+
     const anecdote = anecdoteById(id)
 
     const voted = {
@@ -178,6 +223,7 @@ const App = () => {
         </Route>
      
         <Route path="/">
+          <Notification notification={notification}/>
           <AnecdoteList anecdotes={anecdotes} />
         </Route>
 
