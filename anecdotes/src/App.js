@@ -103,24 +103,39 @@ const Footer = () => (
 // 7.4
 const CreateNew = (props) => {
 
-  const content = useField('text')
+  //const content = useField('text')
 
-  const author = useField('text')
+  //const author = useField('text')
 
-  const info = useField('text')
+  //const info = useField('text')
+
+  const { value:valueContent, bind:bindContent, reset:resetContent } = useField('')
+
+  const { value:valueAuthor, bind:bindAuthor, reset:resetAuthor } = useField('')
+
+  const { value:valueInfo, bind:bindInfo, reset:resetInfo } = useField('')
 
   const history = useHistory()
+
+  // 7.5
+  const handleReset = (event) => {
+    resetContent()
+    resetAuthor()
+    resetInfo()
+  }
 
   const handleSubmit = (event) => {
 
     event.preventDefault()
 
-    console.log('handleSubmit', content.value, author.value, info.value)
+    //console.log('handleSubmit', event.target.type, content.value, author.value, info.value)
+
+    console.log('handleSubmit', event.target.type, valueContent, valueAuthor, valueInfo)
 
     props.addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: valueContent,
+      author: valueAuthor,
+      info: valueInfo,
       votes: 0
     })
 
@@ -133,21 +148,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input type={content.type} value={content.value} onChange={content.onChange} />
+          <input type="text" {...bindContent} />
         </div>
         <div>
           author
-          <input type={author.type} value={author.value} onChange={author.onChange} />
+          <input type="text" {...bindAuthor} />
         </div>
         <div>
           url for more info
-          <input type={info.type} value={info.value} onChange={info.onChange} />
+          <input type="text" {...bindInfo} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button><button type="reset" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
-
 }
 
 // 7.3
