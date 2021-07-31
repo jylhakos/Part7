@@ -142,6 +142,7 @@ const CreateNew = (props) => {
     history.push('/anecdotes')
   }
 
+  // 7.6
   return (
     <div>
       <h2>create a new anecdote</h2>
