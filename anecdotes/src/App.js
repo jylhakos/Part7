@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom'
 
 import './index.css';
 
+// 7.4
+import  { useField } from './hooks'
+
 // 7.1 
 // $ npm install react-router-dom
 
@@ -55,7 +58,7 @@ const Anecdote = ({ anecdotes }) => {
 
   return (
     <div>
-      <h2>{anecdote.content}</h2>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
       <div style={{ paddingTop: '5px' }}>has {anecdote.votes} votes</div>
       <div style={{ paddingTop: '5px' }}>for more info see {anecdote.info}</div>
     </div>
@@ -96,8 +99,59 @@ const Footer = () => (
   </div>
 )
 
-// 7.3
+
+// 7.4
 const CreateNew = (props) => {
+
+  const content = useField('text')
+
+  const author = useField('text')
+
+  const info = useField('text')
+
+  const history = useHistory()
+
+  const handleSubmit = (event) => {
+
+    event.preventDefault()
+
+    console.log('handleSubmit', content.value, author.value, info.value)
+
+    props.addNew({
+      content: content.value,
+      author: author.value,
+      info: info.value,
+      votes: 0
+    })
+
+    history.push('/anecdotes')
+  }
+
+  return (
+    <div>
+      <h2>create a new anecdote</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          content
+          <input type={content.type} value={content.value} onChange={content.onChange} />
+        </div>
+        <div>
+          author
+          <input type={author.type} value={author.value} onChange={author.onChange} />
+        </div>
+        <div>
+          url for more info
+          <input type={info.type} value={info.value} onChange={info.onChange} />
+        </div>
+        <button>create</button>
+      </form>
+    </div>
+  )
+
+}
+
+// 7.3
+/* const CreateNew = (props) => {
 
   const [content, setContent] = useState('')
 
@@ -129,22 +183,22 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' type='text' value={content} onChange={(e) => setContent(e.target.value)} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' type='text' value={author} onChange={(e) => setAuthor(e.target.value)} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info' type='text' value={info} onChange={(e)=> setInfo(e.target.value)} />
         </div>
         <button>create</button>
       </form>
     </div>
   )
 
-}
+}*/
 
 const App = () => {
 
