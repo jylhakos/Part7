@@ -18,7 +18,7 @@ const useField = (type) => {
   }
 }
 
-// 7.6
+// 7.7
 const useCountry = (name) => {
 
   const [country, setCountry] = useState(null)
@@ -38,8 +38,6 @@ const useCountry = (name) => {
         const data = {found: 'True', data: {name: response.data[0].name, capital: response.data[0].capital, population: response.data[0].population, flag: response.data[0].flag}}
         
         setCountry(data)
-
-        return country
     })
   },[{country}])
 
