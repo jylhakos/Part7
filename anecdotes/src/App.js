@@ -159,7 +159,8 @@ const CreateNew = (props) => {
           url for more info
           <input type="text" {...bindInfo} />
         </div>
-        <button type="submit">create</button><button type="reset" onClick={handleReset}>reset</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
