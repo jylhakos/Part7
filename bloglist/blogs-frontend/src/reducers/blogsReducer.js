@@ -16,8 +16,12 @@ const blogsReducer = (state = [], action) => {
 // 7.10
 export const createBlog = (content) => {
 
+  console.log('createBlog',content)
+
   return async dispatch => {
+
     const data = await blogService.create(content)
+
     dispatch({
       type: 'CREATE',
       data

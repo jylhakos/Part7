@@ -8,11 +8,11 @@ import blogService from '../services/blogs'
 // 5.6
 const BlogForm = (props) => {
 
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [newInfo, setNewInfo] = useState(null)
+  //const [newInfo, setNewInfo] = useState(null)
 
   const addBlog = (event) => {
 
@@ -20,24 +20,15 @@ const BlogForm = (props) => {
 
     console.log('Clicked', event.target)
 
-    /*const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      user: user._id
-    }*/
-
-    props.createBlog({
+    props.newBlog({
       title: newTitle,
       author: newAuthor,
       url: newUrl
-      //user: props.user._id
     })
 
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
-
   }
 
   const handleTitleChange = (event) => {

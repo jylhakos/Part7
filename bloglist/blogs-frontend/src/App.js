@@ -11,6 +11,8 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import React, { useState, useEffect } from 'react'
 
+import { connect } from 'react-redux'
+
 // 5.11
 import PropTypes from 'prop-types'
 
@@ -32,8 +34,6 @@ import { setNotification } from './reducers/notificationReducer'
 
 import Notification from './components/Notification'
 
-import { connect } from 'react-redux'
-
 import { initializeBlogs, createBlog } from './reducers/blogsReducer'
 
 Togglable.propTypes = {
@@ -54,43 +54,41 @@ const App = (props) => {
   // BLOGS
   // const [blogs, setBlogs] = useState([])
 
-  // CREATE BLOGS
-  const [newBlog, setNewBlog] = useState('')
-  const [showAll, setShowAll] = useState(false)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-  
   // USERS
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  // 7.9
+  // 7.10
   useEffect(() => {
 
-    dispatch(initializeBlogs())
+    if (user !== null && Object.keys(user).length != 0) {
+      dispatch(initializeBlogs())
+    }
 
-  }, [dispatch])
+  }, [dispatch, user])
 
   // 5.6
   const addBlog = async (blogObject) => {
 
-    const response = await blogService.create(blogObject)
+    //const response = await blogService.create(blogObject)
     //  .then(response => {
 
-    console.log('response', response)
+    //console.log('response', response)
 
     //setBlogs(blogs.concat(response.data))
 
-    const blogs = await blogService.getAll()
+    //const blogs = await blogService.getAll()
 
     // 7.9
     //setBlogs(blogs)
 
-    // 7.10
-    props.setNotification(`The blog ${response.title} is created by ${response.author}`, 5)
+    console.log('blogObject', blogObject)
 
+    await props.createBlog(blogObject)
+
+    // 7.10
+    props.setNotification(`The blog ${blogObject.title} is created by ${blogObject.author}`,5)
   }
 
   useEffect(() => {
@@ -111,12 +109,12 @@ const App = (props) => {
 
   }, [])
 
-  const handleBlogChange = (event) => {
+  //const handleBlogChange = (event) => {
 
-    console.log(event.target.value)
+  //  console.log(event.target.value)
 
-    setNewBlog(event.target.value)
-  }
+  //  setNewBlog(event.target.value)
+  //}
 
   // 5.2
   const handleLogout = async (event) => {
@@ -183,7 +181,7 @@ const App = (props) => {
 
       setPassword('')
 
-      props.setNotification('A wrong username or password', 10)
+      props.setNotification('A wrong username or password',5)
 
     }
   }
@@ -220,7 +218,7 @@ const App = (props) => {
 
     // 5.11
     <Togglable buttonLabel='Create New Blogs'>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm newBlog={addBlog} />
     </Togglable>
   )
 
@@ -235,7 +233,6 @@ const App = (props) => {
             <p>
               {user.name} logged in
               { 
-
                 localStorage.getItem('loggedBlogUser') !== null ? <button style={{margin:'25px'}} onClick={ event => { if(localStorage.getItem('loggedBlogUser') !== null) handleLogout(event) } }> logout</button> : null
               }
               { 
