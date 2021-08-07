@@ -6,26 +6,15 @@ const blogsReducer = (state = [], action) => {
     case 'INIT':
       console.log('action.data', action.data)
       return action.data
-    case 'CREATE': 
+    case 'CREATE':
+      console.log('action.data', action.data)
       return [...state, action.data]
+    case 'LIKE':
+      console.log('action.data', action.data)
+      const likes = action.data
+      return state.map(like => like.id === likes.id ? likes : like)
     default: 
       return state
-  }
-}
-
-// 7.10
-export const createBlog = (content) => {
-
-  console.log('createBlog',content)
-
-  return async dispatch => {
-
-    const data = await blogService.create(content)
-
-    dispatch({
-      type: 'CREATE',
-      data
-    })
   }
 }
 
@@ -38,10 +27,54 @@ export const initializeBlogs = () => {
 
     const data = await blogService.getAll()
 
-    console.log('blogs', data)
+    console.log('initializeBlogs', data)
 
     dispatch({
       type: 'INIT',
+      data
+    })
+  }
+}
+
+// 7.10
+export const createBlog = (content) => {
+
+  console.log('createBlog', content)
+
+  return async dispatch => {
+
+    const data = await blogService.create(content)
+
+    console.log('data', data)
+
+    dispatch({
+      type: 'CREATE',
+      data
+    })
+  }
+}
+
+// 7.11
+export const likeBlog = (blog) => {
+
+  console.log('likeBlog', blog)
+
+  return async dispatch => {
+
+    console.log('dispatch', blog)
+
+    console.log('blog.likes', blog.likes)
+
+    const likes = {...blog, likes: blog.likes + 1 }
+
+    console.log('dispatch', likes)
+
+    const data = await blogService.update(likes)
+
+    console.log('data', data)
+
+    dispatch({
+      type: 'LIKE',
       data
     })
   }

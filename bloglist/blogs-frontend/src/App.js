@@ -34,7 +34,7 @@ import { setNotification } from './reducers/notificationReducer'
 
 import Notification from './components/Notification'
 
-import { initializeBlogs, createBlog } from './reducers/blogsReducer'
+import { initializeBlogs, createBlog, likeBlog } from './reducers/blogsReducer'
 
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
@@ -70,18 +70,6 @@ const App = (props) => {
 
   // 5.6
   const addBlog = async (blogObject) => {
-
-    //const response = await blogService.create(blogObject)
-    //  .then(response => {
-
-    //console.log('response', response)
-
-    //setBlogs(blogs.concat(response.data))
-
-    //const blogs = await blogService.getAll()
-
-    // 7.9
-    //setBlogs(blogs)
 
     console.log('blogObject', blogObject)
 
@@ -214,6 +202,23 @@ const App = (props) => {
     </div>
   )
 
+  const like = (blog) => {
+
+    console.log('blog', blog)
+
+    const id = blog.id
+
+    console.log('id', id)
+
+    const likes = blogs.find(like => like.id === id)
+
+    console.log('likes', likes)
+
+    dispatch(likeBlog(likes))
+
+    dispatch(setNotification(`you voted '${likes.title}'`, 5))
+  }
+
   const blogForm = () => (
 
     // 5.11
@@ -240,7 +245,10 @@ const App = (props) => {
               }
             </p>
           </div>
-          {  blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+          <div>
+          { blogs.map(blog => <Blog key={blog.id} blog={blog} like={like} id={blog.id}></Blog>  
+          )}
+          </div>
         </div>
        }
     </div>
@@ -251,6 +259,7 @@ export default connect(
   null,
   { setNotification,
     initializeBlogs,
-    createBlog
+    createBlog,
+    likeBlog
   }
 )(App)

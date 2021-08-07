@@ -23,7 +23,7 @@ const BlogForm = (props) => {
     props.newBlog({
       title: newTitle,
       author: newAuthor,
-      url: newUrl
+      url: newUrl,
     })
 
     setNewTitle('')

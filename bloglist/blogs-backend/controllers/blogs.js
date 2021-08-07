@@ -195,16 +195,17 @@ blogsRouter.put('/api/blogs/:id', async (request, response) => {
 
   console.log(body)
 
-  /*const blog = {
+  const blog = {
     _id: request.params.id,
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-  }*/
+  }
 
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate({_id: ObjectId(request.params.id)}, {$inc: {'likes': body.likes}}, { new: true })
+    //const updatedBlog = await Blog.findByIdAndUpdate({_id: ObjectId(request.params.id)}, {$inc: {'likes': body.likes}}, { new: true })
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     logger.info(updatedBlog)
     response.json(updatedBlog.toJSON())
   } catch (error) {
