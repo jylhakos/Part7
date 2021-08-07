@@ -3,10 +3,10 @@ import Notification from './../components/Notification'
 const notificationReducer = (state = null, action) => {
 
   switch (action.type) {
-    case 'SET_MSG':
-      console.log('SET_MSG', action.content)
+    case 'NOTIFICATION':
+      console.log('NOTIFICATION', action.content)
       return action.content
-    case 'CLEAR_MSG':
+    case 'CLEAR':
       return null
     default: 
       return state
@@ -22,7 +22,7 @@ export const setNotification = (content, time) => {
     console.log('setNotification', content)
 
     dispatch({
-      type: 'SET_MSG',
+      type: 'NOTIFICATION',
       content
     })
 
@@ -32,14 +32,14 @@ export const setNotification = (content, time) => {
 
     timeoutId = setTimeout(() => {
       dispatch({
-        type: 'CLEAR_MSG'
+        type: 'CLEAR'
       })
     }, time * 1000)
   }
 }
 
 export const clearNotification = (id) => (
-  { type: 'CLEAR_MSG' }
+  { type: 'CLEAR' }
 )
 
 export default notificationReducer

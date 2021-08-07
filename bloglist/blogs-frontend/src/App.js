@@ -88,7 +88,7 @@ const App = (props) => {
     await props.createBlog(blogObject)
 
     // 7.10
-    props.setNotification(`The blog ${blogObject.title} is created by ${blogObject.author}`,5)
+    props.setNotification(`The blog ${blogObject.title} is created by ${user.name}`,5)
   }
 
   useEffect(() => {
@@ -157,7 +157,7 @@ const App = (props) => {
 
     try {
 
-      const user = await loginService.login({username, password,})
+      const user = await loginService.login({username, password})
 
       console.log('Login: ', username, password)
 
