@@ -36,6 +36,8 @@ import Notification from './components/Notification'
 
 import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogsReducer'
 
+import { login, logout } from './reducers/userReducer'
+
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
 }
@@ -57,10 +59,19 @@ const App = (props) => {
   // USERS
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // 7.12
+  //const [user, setUser] = useState(null)
+
+  // 7.12
+  const user = useSelector(state => {
+    console.log('useSelector', state.user)
+    return state.user
+  })
 
   // 7.10
   useEffect(() => {
+
+    console.log('useEffect', user)
 
     if (user !== null && Object.keys(user).length != 0) {
       dispatch(initializeBlogs())
@@ -85,13 +96,15 @@ const App = (props) => {
 
     if (loggedUserJSON) {
 
-      const user = JSON.parse(loggedUserJSON)
+      const logged = JSON.parse(loggedUserJSON)
 
-      console.log('loggedUser', user)
+      console.log('logged', logged)
 
-      setUser(user)
+      //setUser(logged)
 
-      blogService.setToken(user.token)
+      dispatch(login(logged))
+
+      blogService.setToken(logged.token)
 
     }
 
@@ -113,7 +126,9 @@ const App = (props) => {
 
     try {
 
-      setUser({})
+      dispatch(logout(user))
+
+      //setUser({})
 
       setUsername('')
 
@@ -145,17 +160,19 @@ const App = (props) => {
 
     try {
 
-      const user = await loginService.login({username, password})
+      const logged = await loginService.login({username, password})
 
       console.log('Login: ', username, password)
 
-      blogService.setToken(user.token)
+      blogService.setToken(logged.token)
 
-      window.localStorage.setItem('loggedBlogUser', JSON.stringify(user)) 
+      window.localStorage.setItem('loggedBlogUser', JSON.stringify(logged)) 
 
-      setUser(user)
+      dispatch(login(logged))
 
-      console.log('user', user)
+      //setUser(login)
+
+      console.log('user', logged)
 
       setUsername('')
 
@@ -214,7 +231,7 @@ const App = (props) => {
 
     dispatch(likeBlog(likes))
 
-    dispatch(setNotification(`you voted '${likes.title}'`, 5))
+    dispatch(setNotification(`you liked '${likes.title}'`, 5))
   }
 
   const remove = (object) => {
@@ -250,7 +267,7 @@ const App = (props) => {
           <Notification />
           <div>
             <p>
-              {user.name} logged in
+              {user.user.name} logged in
               { 
                 localStorage.getItem('loggedBlogUser') !== null ? <button style={{margin:'25px'}} onClick={ event => { if(localStorage.getItem('loggedBlogUser') !== null) handleLogout(event) } }> logout</button> : null
               }
@@ -275,6 +292,8 @@ export default connect(
     initializeBlogs,
     createBlog,
     likeBlog,
-    removeBlog
+    removeBlog,
+    login,
+    logout
   }
 )(App)
