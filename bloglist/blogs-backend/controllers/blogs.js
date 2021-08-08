@@ -204,7 +204,6 @@ blogsRouter.put('/api/blogs/:id', async (request, response) => {
   }
 
   try {
-    //const updatedBlog = await Blog.findByIdAndUpdate({_id: ObjectId(request.params.id)}, {$inc: {'likes': body.likes}}, { new: true })
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     logger.info(updatedBlog)
     response.json(updatedBlog.toJSON())

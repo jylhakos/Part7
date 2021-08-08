@@ -62,25 +62,13 @@ const update = async (object) => {
   return response.data
 }
 
-const remove = (id) => {
-  const response = axios.delete(`${baseUrl}/${id}`)
+const remove = async (object) => {
+
+  console.log('remove', object.id)
+
+  const response = await axios.delete(`${baseUrl}/${object.id}`, getConfig())
+
   return response.data
 }
-
-/*const update = async (object) => {
-  const response = await axios.put(`${baseUrl}/${object.id}`, object)
-  return response.data
-}*/
-
-/*const update = (blog) => {
-  const request = axios.put(`${baseUrl}/${blog.id}`, blog, getConfig())
-  return request.then(response => response.data)
-}*/
-
-/*const remove = (id) => {
-  const request = axios.delete(`${baseUrl}/${id}`, getConfig())
-  return request.then(response => response.data)
-}*/
-
 
 export default { getAll, setToken, create, update, remove }

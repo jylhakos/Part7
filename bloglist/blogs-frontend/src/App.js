@@ -34,7 +34,7 @@ import { setNotification } from './reducers/notificationReducer'
 
 import Notification from './components/Notification'
 
-import { initializeBlogs, createBlog, likeBlog } from './reducers/blogsReducer'
+import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogsReducer'
 
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
@@ -202,21 +202,35 @@ const App = (props) => {
     </div>
   )
 
-  const like = (blog) => {
+  const like = (object) => {
 
-    console.log('blog', blog)
+    const id = object.id
 
-    const id = blog.id
+    console.log('like', id)
 
-    console.log('id', id)
-
-    const likes = blogs.find(like => like.id === id)
+    const likes = blogs.find(blog => blog.id === id)
 
     console.log('likes', likes)
 
     dispatch(likeBlog(likes))
 
     dispatch(setNotification(`you voted '${likes.title}'`, 5))
+  }
+
+  const remove = (object) => {
+
+    const id = object.id
+
+    console.log('remove', id)
+
+    const archive = blogs.find(blog => blog.id === id)
+
+    if (window.confirm(`Delete '${archive.title}' ?`)) {
+
+      dispatch(removeBlog(archive))
+
+      dispatch(setNotification(`you deleted '${archive.title}'`, 5))
+    }
   }
 
   const blogForm = () => (
@@ -246,7 +260,7 @@ const App = (props) => {
             </p>
           </div>
           <div>
-          { blogs.map(blog => <Blog key={blog.id} blog={blog} like={like} id={blog.id}></Blog>  
+          { blogs.map(blog => <Blog key={blog.id} blog={blog} like={like} remove={remove} id={blog.id}></Blog>  
           )}
           </div>
         </div>
@@ -260,6 +274,7 @@ export default connect(
   { setNotification,
     initializeBlogs,
     createBlog,
-    likeBlog
+    likeBlog,
+    removeBlog
   }
 )(App)
