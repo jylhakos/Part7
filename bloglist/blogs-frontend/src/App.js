@@ -29,6 +29,21 @@ import blogService from './services/blogs'
 
 import loginService from './services/login'
 
+// 7.13
+// $ npm install react-router-dom
+
+import {
+  BrowserRouter as Router,
+  Switch, 
+  Route, 
+  Link
+} from 'react-router-dom'
+
+// 7.13
+import userService from './services/users'
+
+import UsersList from './components/UsersList'
+
 // 7.9 
 import { setNotification } from './reducers/notificationReducer'
 
@@ -41,6 +56,33 @@ import { login, logout } from './reducers/userReducer'
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
 }
+
+const Blogs = ({user,loginForm,handleLogout,blogForm,blogs,like,remove}) => (
+  <div>
+       {
+        user === null ? loginForm() :
+        <div>
+        <h2>blogs</h2>
+          <Notification />
+          <div>
+            <p>
+              {user.user.name} logged in
+              { 
+                localStorage.getItem('loggedBlogUser') !== null ? <button style={{margin:'25px'}} onClick={ event => { if(localStorage.getItem('loggedBlogUser') !== null) handleLogout(event) } }> logout</button> : null
+              }
+              { 
+                blogForm()
+              }
+            </p>
+          </div>
+          <div>
+          { blogs.map(blog => <Blog key={blog.id} blog={blog} like={like} remove={remove} id={blog.id}></Blog>  
+          )}
+          </div>
+        </div>
+       }
+    </div>
+)
 
 const App = (props) => {
 
@@ -56,11 +98,14 @@ const App = (props) => {
   // BLOGS
   // const [blogs, setBlogs] = useState([])
 
-  // USERS
+  // USER
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   // 7.12
   //const [user, setUser] = useState(null)
+
+  // 7.13
+  const [users, setUsers] = useState(null)
 
   // 7.12
   const user = useSelector(state => {
@@ -250,6 +295,26 @@ const App = (props) => {
     }
   }
 
+  useEffect(() => {
+  }, [])
+
+  useEffect(() => {
+
+    async function fetch() {
+
+      const response = await userService.getUsers()
+
+      console.log('fetch',response)
+
+      if (response !== null) {
+
+        setUsers(response)
+      }
+    }
+
+    fetch()
+  }, [user])
+
   const blogForm = () => (
 
     // 5.11
@@ -258,31 +323,26 @@ const App = (props) => {
     </Togglable>
   )
 
+  const padding = {
+    paddingRight: 5
+  }
+
   return (
-    <div>
-       {
-        user === null ? loginForm() :
-        <div>
-        <h2>blogs</h2>
-          <Notification />
-          <div>
-            <p>
-              {user.user.name} logged in
-              { 
-                localStorage.getItem('loggedBlogUser') !== null ? <button style={{margin:'25px'}} onClick={ event => { if(localStorage.getItem('loggedBlogUser') !== null) handleLogout(event) } }> logout</button> : null
-              }
-              { 
-                blogForm()
-              }
-            </p>
-          </div>
-          <div>
-          { blogs.map(blog => <Blog key={blog.id} blog={blog} like={like} remove={remove} id={blog.id}></Blog>  
-          )}
-          </div>
-        </div>
-       }
-    </div>
+    <Router>
+      <div>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+      </div>
+
+      <Switch>
+        <Route path="/users">
+          <UsersList users={users}/>
+        </Route>
+        <Route path="/">
+          <Blogs user={user} loginForm={loginForm} handleLogout={handleLogout} blogForm={blogForm} blogs={blogs} like={like} remove={remove}/>
+        </Route>
+      </Switch>
+    </Router>
   )
 }
 
