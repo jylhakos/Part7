@@ -260,5 +260,5 @@ ReactDOM.render(
 
 ```
 
-![alt text](https://github.com/jylhakos/Part7/tree/main/Part7.png?raw=true)
+![alt text](https://github.com/jylhakos/Part7/blob/main/Part7.png?raw=true)
 
